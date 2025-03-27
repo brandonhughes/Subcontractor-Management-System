@@ -44,6 +44,11 @@ Each entry should follow this format:
   - Weighted calculation for overall "Subcontractor Score"
   - Letter grade display (A through F) on profile page
   - Configurable weighting formula for administrators
+- Set up version control:
+  - Initialized Git repository
+  - Created .gitignore file
+  - Created README.md for GitHub
+  - Connected to GitHub repository at https://github.com/brandonhughes/Subcontractor-Management-System
 
 #### Status Updates
 - All requirements currently marked as [To Do]
