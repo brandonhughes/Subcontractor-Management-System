@@ -4,9 +4,9 @@
 A feedback-based platform for internal users to evaluate and rate subcontractors. Administrators manage subcontractor profiles, while internal users provide structured feedback through questionnaires and comments, with results aggregated into a centralized view (similar to Yelp).
 
 ## Project Documentation
-- [To Do] Maintain up-to-date requirements document
-- [To Do] Update SUMMARY.md after completing each task
-- [To Do] Follow AI_RULES.md guidelines for development
+- [In Progress] Maintain up-to-date requirements document
+- [In Progress] Update SUMMARY.md after completing each task
+- [In Progress] Follow AI_RULES.md guidelines for development
 
 ## Functional Requirements
 
@@ -48,17 +48,17 @@ A feedback-based platform for internal users to evaluate and rate subcontractors
 ## Technical Requirements
 
 ### Frontend
-- [To Do] React-based responsive web application
-- [To Do] Material UI for consistent design
-- [To Do] TypeScript for type safety
-- [To Do] State management using React Context or Redux
+- [In Progress] React-based responsive web application
+- [In Progress] Material UI for consistent design
+- [In Progress] TypeScript for type safety
+- [In Progress] State management using React Context or Redux
 
 ### Backend
-- [To Do] Node.js with Express
-- [To Do] RESTful API architecture
-- [To Do] PostgreSQL database
-- [To Do] Sequelize ORM for database interactions
-- [To Do] JWT authentication
+- [In Progress] Node.js with Express
+- [In Progress] RESTful API architecture
+- [In Progress] PostgreSQL database
+- [In Progress] Sequelize ORM for database interactions
+- [In Progress] JWT authentication
 
 ### Security
 - [To Do] Data encryption
