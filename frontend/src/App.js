@@ -99,6 +99,7 @@ function App() {
       }>
         <Route path="dashboard" element={<InternalDashboard />} />
         <Route path="subcontractors/:id" element={<SubcontractorDetails />} />
+        <Route path="reviews/new" element={<ReviewForm />} />
         <Route path="reviews/new/:subcontractorId" element={<ReviewForm />} />
         <Route path="reviews/edit/:reviewId" element={<ReviewForm />} />
         <Route index element={<Navigate to="/dashboard" replace />} />

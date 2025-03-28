@@ -30,11 +30,11 @@ const SubcontractorCard = ({ subcontractor }) => {
   const navigate = useNavigate();
   
   const handleViewDetails = () => {
-    navigate(`/internal/subcontractors/${subcontractor.id}`);
+    navigate(`/subcontractors/${subcontractor.id}`);
   };
 
   const handleWriteReview = () => {
-    navigate(`/internal/reviews/new/${subcontractor.id}`);
+    navigate(`/reviews/new/${subcontractor.id}`);
   }
   
   // Get color for letter grade
@@ -160,7 +160,7 @@ const InternalDashboard = () => {
   
   // Handle creating a new review
   const handleCreateReview = () => {
-    navigate('/internal/reviews/new');
+    navigate('/reviews/new');
   };
   
   // Filter subcontractors based on search term
