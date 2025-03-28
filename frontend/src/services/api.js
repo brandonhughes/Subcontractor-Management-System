@@ -52,6 +52,19 @@ const apiService = {
   createQuestion: (data) => api.post('/api/questions', data),
   updateQuestion: (id, data) => api.put(`/api/questions/${id}`, data),
   deleteQuestion: (id) => api.delete(`/api/questions/${id}`),
+  
+  // Reviews
+  getReviewsBySubcontractor: (subcontractorId) => api.get(`/api/reviews/subcontractor/${subcontractorId}`),
+  getReview: (id) => api.get(`/api/reviews/${id}`),
+  createReview: (data) => api.post('/api/reviews', data),
+  updateReview: (id, data) => api.put(`/api/reviews/${id}`, data),
+  deleteReview: (id) => api.delete(`/api/reviews/${id}`),
+  uploadReviewAttachment: (reviewId, formData) => api.post(`/api/reviews/${reviewId}/attachments`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  }),
+  deleteReviewAttachment: (reviewId, attachmentId) => api.delete(`/api/reviews/${reviewId}/attachments/${attachmentId}`),
 };
 
 // Add a request interceptor to include auth token
