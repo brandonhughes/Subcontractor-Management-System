@@ -1,0 +1,64 @@
+services:
+  # Backend API service
+  - type: web
+    name: subcontractor-ms-api
+    env: node
+    region: oregon
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DB_HOST
+        fromDatabase:
+          name: subcontractor-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: subcontractor-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: subcontractor-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: subcontractor-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: subcontractor-db
+          property: password
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 1d
+      - key: UPLOAD_DIR
+        value: uploads
+      - key: MAX_FILE_SIZE
+        value: 5242880
+      - key: LOG_LEVEL
+        value: info
+
+  # Frontend service
+  - type: web
+    name: subcontractor-ms-frontend
+    env: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: ./frontend/build
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://subcontractor-ms-api.onrender.com
+
+# Database
+databases:
+  - name: subcontractor-db
+    databaseName: subcontractor_management
+    user: subcontractor_user
+    plan: free

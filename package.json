@@ -1,0 +1,33 @@
+{
+  "name": "subcontractor-management-system",
+  "version": "1.0.0",
+  "description": "Subcontractor Management System - A platform for managing and reviewing subcontractors",
+  "scripts": {
+    "install:backend": "cd backend && npm install",
+    "install:frontend": "cd frontend && npm install",
+    "install:all": "npm run install:backend && npm run install:frontend",
+    "start:backend": "cd backend && npm start",
+    "start:frontend": "cd frontend && npm start",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm start",
+    "build:frontend": "cd frontend && npm run build",
+    "test:backend": "cd backend && npm test",
+    "test:frontend": "cd frontend && npm test"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/brandonhughes/Subcontractor-Management-System.git"
+  },
+  "keywords": [
+    "subcontractor",
+    "management",
+    "review",
+    "scoring",
+    "fullstack"
+  ],
+  "author": "Brandon Hughes",
+  "license": "MIT"
+}
