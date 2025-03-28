@@ -1,11 +1,12 @@
 services:
-  # Backend API service
+  # Combined service (serves both backend API and frontend)
   - type: web
-    name: subcontractor-ms-api
+    name: subcontractor-ms
     env: node
     region: oregon
-    buildCommand: cd backend && npm install
-    startCommand: cd backend && npm start
+    plan: free
+    buildCommand: npm install && node render-build.js && cd render-build && npm install && npm run build:all
+    startCommand: cd render-build && npm start
     envVars:
       - key: NODE_ENV
         value: production
@@ -41,20 +42,8 @@ services:
         value: 5242880
       - key: LOG_LEVEL
         value: info
-
-  # Frontend service
-  - type: web
-    name: subcontractor-ms-frontend
-    env: static
-    buildCommand: chmod +x render-setup.sh && ./render-setup.sh && cd frontend && ./build-render.sh
-    staticPublishPath: ./frontend/build
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
-    envVars:
       - key: REACT_APP_API_URL
-        value: https://subcontractor-ms-api.onrender.com
+        value: /api
 
 # Database
 databases:
