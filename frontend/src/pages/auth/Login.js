@@ -20,7 +20,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 const validationSchema = Yup.object({
-  username: Yup.string().required('Username is required'),
+  username: Yup.string().required('Username or email is required'),
   password: Yup.string().required('Password is required')
 });
 
@@ -73,7 +73,7 @@ export default function Login() {
             required
             fullWidth
             id="username"
-            label="Username"
+            label="Username or Email"
             name="username"
             autoComplete="username"
             autoFocus

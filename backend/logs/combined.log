@@ -13,3 +13,7 @@
 {"level":"info","message":"Database connection has been established successfully.","service":"subcontractor-management-api","timestamp":"2025-03-28 11:26:19"}
 {"level":"info","message":"Database synchronized","service":"subcontractor-management-api","timestamp":"2025-03-28 11:26:19"}
 {"level":"info","message":"Server is running on port 5001","service":"subcontractor-management-api","timestamp":"2025-03-28 11:26:19"}
+{"level":"info","message":"Database connection has been established successfully.","service":"subcontractor-management-api","timestamp":"2025-03-28 11:34:10"}
+{"level":"info","message":"Database connection has been established successfully.","service":"subcontractor-management-api","timestamp":"2025-03-28 11:34:28"}
+{"level":"info","message":"Database synchronized","service":"subcontractor-management-api","timestamp":"2025-03-28 11:34:28"}
+{"level":"info","message":"Server is running on port 5001","service":"subcontractor-management-api","timestamp":"2025-03-28 11:34:28"}

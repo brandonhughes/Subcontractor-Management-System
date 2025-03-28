@@ -80,9 +80,14 @@ const login = async (req, res) => {
 
     const { username, password } = req.body;
 
-    // Find user by username
+    // Find user by username or email
     const user = await User.findOne({
-      where: { username }
+      where: {
+        [User.sequelize.Op.or]: [
+          { username },
+          { email: username } // Allow login with email in username field
+        ]
+      }
     });
 
     if (!user) {
