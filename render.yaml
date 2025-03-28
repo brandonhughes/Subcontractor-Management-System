@@ -1,15 +1,16 @@
 services:
-  # Combined service (serves both backend API and frontend)
+  # Simplified service definition to ensure port detection
   - type: web
     name: subcontractor-ms
     env: node
     region: oregon
     plan: free
-    buildCommand: npm install && npm run build:render
-    startCommand: npm start
-    # Explicitly set to the port Render expects (10000)
-    # Set health check path to ensure Render can detect the service
-    healthCheckPath: /health
+    # Super simple build & start commands
+    buildCommand: npm install
+    startCommand: node server.js
+    # Heath check path that the root server will respond to
+    healthCheckPath: /
+    # Explicitly set PORT to 10000 as required by Render
     envVars:
       - key: NODE_ENV
         value: production
