@@ -10,8 +10,8 @@ exports.getAllQuestions = async (req, res) => {
         as: 'category'
       }],
       order: [
-        [{ model: QuestionCategory, as: 'category' }, 'order', 'ASC'],
-        ['order', 'ASC']
+        [{ model: QuestionCategory, as: 'category' }, 'displayOrder', 'ASC'],
+        ['displayOrder', 'ASC']
       ]
     });
     
@@ -26,8 +26,37 @@ exports.getAllQuestions = async (req, res) => {
 exports.getAllCategories = async (req, res) => {
   try {
     const categories = await QuestionCategory.findAll({
-      order: [['order', 'ASC']]
+      order: [['displayOrder', 'ASC']]
     });
+    
+    // If no categories exist, create a default one with a sample question
+    if (categories.length === 0) {
+      const defaultCategory = await QuestionCategory.create({
+        name: 'General Feedback',
+        description: 'General questions about the subcontractor',
+        weight: 1.0,
+        displayOrder: 0,
+        isActive: true
+      });
+      
+      // Create a default question in this category
+      await Question.create({
+        text: 'How satisfied are you with the quality of work the subcontractor did?',
+        categoryId: defaultCategory.id,
+        weight: 1.0,
+        helpText: 'Consider factors like craftsmanship, attention to detail, and adherence to specifications',
+        isRequired: true,
+        displayOrder: 0,
+        isActive: true
+      });
+      
+      // Fetch categories again to include the newly created one
+      const updatedCategories = await QuestionCategory.findAll({
+        order: [['displayOrder', 'ASC']]
+      });
+      
+      return res.status(200).json(updatedCategories);
+    }
     
     res.status(200).json(categories);
   } catch (error) {
@@ -43,7 +72,7 @@ exports.getQuestionsByCategory = async (req, res) => {
     
     const questions = await Question.findAll({
       where: { categoryId: id },
-      order: [['order', 'ASC']]
+      order: [['displayOrder', 'ASC']]
     });
     
     res.status(200).json(questions);
@@ -56,7 +85,7 @@ exports.getQuestionsByCategory = async (req, res) => {
 // Create question category
 exports.createCategory = async (req, res) => {
   try {
-    const { name, description, order, weight } = req.body;
+    const { name, description, displayOrder, weight, isActive } = req.body;
     
     // Validate required fields
     if (!name) {
@@ -66,8 +95,9 @@ exports.createCategory = async (req, res) => {
     const category = await QuestionCategory.create({
       name,
       description,
-      order: order || 0,
-      weight: weight || 1
+      displayOrder: displayOrder || 0,
+      weight: weight || 1,
+      isActive: isActive !== undefined ? isActive : true
     });
     
     res.status(201).json({
@@ -135,7 +165,7 @@ exports.deleteCategory = async (req, res) => {
 // Create question
 exports.createQuestion = async (req, res) => {
   try {
-    const { text, type, options, categoryId, order, weight, required } = req.body;
+    const { text, categoryId, displayOrder, weight, helpText, isRequired, isActive } = req.body;
     
     // Validate required fields
     if (!text || !categoryId) {
@@ -151,12 +181,12 @@ exports.createQuestion = async (req, res) => {
     
     const question = await Question.create({
       text,
-      type: type || 'rating',
-      options: options || null,
       categoryId,
-      order: order || 0,
-      weight: weight || 1,
-      required: required !== undefined ? required : true
+      displayOrder: displayOrder || 0,
+      weight: weight || 1.0,
+      helpText: helpText || null,
+      isRequired: isRequired !== undefined ? isRequired : true,
+      isActive: isActive !== undefined ? isActive : true
     });
     
     res.status(201).json({

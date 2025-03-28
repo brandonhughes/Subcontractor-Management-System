@@ -41,6 +41,17 @@ const apiService = {
     }
   }),
   deleteDocument: (subcontractorId, documentId) => api.delete(`/api/subcontractors/${subcontractorId}/documents/${documentId}`),
+  
+  // Questionnaires
+  getQuestionCategories: () => api.get('/api/questions/categories'),
+  getQuestionsByCategory: (categoryId) => api.get(`/api/questions/categories/${categoryId}`),
+  getAllQuestions: () => api.get('/api/questions'),
+  createQuestionCategory: (data) => api.post('/api/questions/categories', data),
+  updateQuestionCategory: (id, data) => api.put(`/api/questions/categories/${id}`, data),
+  deleteQuestionCategory: (id) => api.delete(`/api/questions/categories/${id}`),
+  createQuestion: (data) => api.post('/api/questions', data),
+  updateQuestion: (id, data) => api.put(`/api/questions/${id}`, data),
+  deleteQuestion: (id) => api.delete(`/api/questions/${id}`),
 };
 
 // Add a request interceptor to include auth token
