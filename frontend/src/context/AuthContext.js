@@ -21,6 +21,7 @@ export const AuthProvider = ({ children }) => {
         // Set token in axios headers
         api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         
+        console.log('Fetching current user...');
         const response = await api.get('/api/auth/me');
         setCurrentUser(response.data.user);
         setError(null);
@@ -40,9 +41,12 @@ export const AuthProvider = ({ children }) => {
   const login = async (username, password) => {
     try {
       setLoading(true);
+      console.log('Attempting login with API at:', api.defaults.baseURL);
       const response = await api.post('/api/auth/login', { username, password });
       
+      console.log('Login response:', response);
       const { token, user } = response.data;
+      console.log('Login successful:', user);
       
       // Save token and set user
       localStorage.setItem('token', token);

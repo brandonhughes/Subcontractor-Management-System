@@ -25,7 +25,7 @@ const validationSchema = Yup.object({
 });
 
 export default function Login() {
-  const { login } = useContext(AuthContext);
+  const { login, error: contextError } = useContext(AuthContext);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -37,16 +37,26 @@ export default function Login() {
     },
     validationSchema,
     onSubmit: async (values) => {
+      console.log('Form submission started');
       setLoading(true);
       setError(null);
       
       try {
-        await login(values.username, values.password);
+        console.log('Attempting login with:', { username: values.username });
+        const result = await login(values.username, values.password);
+        console.log('Login successful, user:', result);
         // Redirect happens in App.js based on authentication state
       } catch (err) {
+        console.error('Login failed:', err);
         setError(err.message || 'Failed to login. Please check your credentials.');
+        // Show detailed error in console
+        if (err.response) {
+          console.error('Response error:', err.response.data);
+          console.error('Status:', err.response.status);
+        }
       } finally {
         setLoading(false);
+        console.log('Form submission completed');
       }
     }
   });
@@ -68,6 +78,10 @@ export default function Login() {
         )}
         
         <Box component="form" onSubmit={formik.handleSubmit} noValidate sx={{ mt: 1, width: '100%' }}>
+          {/* Debug info - remove in production */}
+          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
+            API URL: {process.env.REACT_APP_API_URL}
+          </Typography>
           <TextField
             margin="normal"
             required
