@@ -19,15 +19,20 @@ fi
 
 # Install packages including dev dependencies
 echo "Installing frontend dependencies..."
-npm install --include=dev
+npm install --include=dev --legacy-peer-deps
 
 # Verify that react-scripts is installed
 if [ -d "node_modules/react-scripts" ]; then
   echo "react-scripts found in node_modules"
 else
   echo "react-scripts not found, installing explicitly..."
-  npm install react-scripts --save-dev
+  npm install react-scripts@5.0.1 --save-dev --legacy-peer-deps
 fi
+
+# Make sure TypeScript version is compatible
+echo "Installing compatible TypeScript version..."
+npm uninstall typescript
+npm install typescript@4.9.5 --save --legacy-peer-deps
 
 # Display npm package info
 echo "Checking react-scripts installation..."
