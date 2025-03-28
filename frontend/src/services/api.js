@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5001/api',
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5001',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -13,21 +13,21 @@ console.log('API Base URL:', api.defaults.baseURL);
 // API service object for more organized usage
 const apiService = {
   // Auth
-  login: (credentials) => api.post('/auth/login', credentials),
-  register: (userData) => api.post('/auth/register', userData),
-  getCurrentUser: () => api.get('/auth/me'),
+  login: (credentials) => api.post('/api/auth/login', credentials),
+  register: (userData) => api.post('/api/auth/register', userData),
+  getCurrentUser: () => api.get('/api/auth/me'),
   
   // Users
-  getUsers: () => api.get('/users'),
-  getUser: (id) => api.get(`/users/${id}`),
-  createUser: (userData) => api.post('/users', userData),
-  updateUser: (id, userData) => api.put(`/users/${id}`, userData),
-  resetPassword: (id, passwordData) => api.put(`/users/${id}/password`, passwordData),
-  deleteUser: (id) => api.delete(`/users/${id}`),
+  getUsers: () => api.get('/api/users'),
+  getUser: (id) => api.get(`/api/users/${id}`),
+  createUser: (userData) => api.post('/api/users', userData),
+  updateUser: (id, userData) => api.put(`/api/users/${id}`, userData),
+  resetPassword: (id, passwordData) => api.put(`/api/users/${id}/password`, passwordData),
+  deleteUser: (id) => api.delete(`/api/users/${id}`),
   
   // Profile
-  updateProfile: (userData) => api.put('/users/me', userData),
-  changePassword: (passwordData) => api.put('/users/me/password', passwordData),
+  updateProfile: (userData) => api.put('/api/users/me', userData),
+  changePassword: (passwordData) => api.put('/api/users/me/password', passwordData),
 };
 
 // Add a request interceptor to include auth token

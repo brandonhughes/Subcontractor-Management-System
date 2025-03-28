@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import api from '../services/api';
+import api, { apiService } from '../services/api';
 
 export const AuthContext = createContext();
 
@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
         api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         
         console.log('Fetching current user...');
-        const response = await api.get('/auth/me');
+        const response = await apiService.getCurrentUser();
         setCurrentUser(response.data.user);
         setError(null);
       } catch (err) {
@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       console.log('Attempting login with API at:', api.defaults.baseURL);
-      const response = await api.post('/auth/login', { username, password });
+      const response = await apiService.login({ username, password });
       
       console.log('Login response:', response);
       const { token, user } = response.data;
@@ -71,7 +71,7 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     try {
       setLoading(true);
-      const response = await api.post('/auth/register', userData);
+      const response = await apiService.register(userData);
       
       const { token, user } = response.data;
       
