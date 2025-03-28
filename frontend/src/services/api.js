@@ -28,6 +28,19 @@ const apiService = {
   // Profile
   updateProfile: (userData) => api.put('/api/users/me', userData),
   changePassword: (passwordData) => api.put('/api/users/me/password', passwordData),
+  
+  // Subcontractors
+  getSubcontractors: () => api.get('/api/subcontractors'),
+  getSubcontractor: (id) => api.get(`/api/subcontractors/${id}`),
+  createSubcontractor: (data) => api.post('/api/subcontractors', data),
+  updateSubcontractor: (id, data) => api.put(`/api/subcontractors/${id}`, data),
+  deleteSubcontractor: (id) => api.delete(`/api/subcontractors/${id}`),
+  uploadDocument: (id, formData) => api.post(`/api/subcontractors/${id}/documents`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  }),
+  deleteDocument: (subcontractorId, documentId) => api.delete(`/api/subcontractors/${subcontractorId}/documents/${documentId}`),
 };
 
 // Add a request interceptor to include auth token

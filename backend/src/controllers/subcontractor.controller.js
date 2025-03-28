@@ -45,7 +45,19 @@ const upload = multer({
 exports.getAllSubcontractors = async (req, res) => {
   try {
     const subcontractors = await Subcontractor.findAll({
-      attributes: ['id', 'companyName', 'contactName', 'phoneNumber', 'email', 'rating', 'status']
+      attributes: [
+        'id', 
+        'name', 
+        'contactName', 
+        'phone', 
+        'email', 
+        'specialties', 
+        'averageRating', 
+        'letterGrade',
+        'status',
+        'createdAt',
+        'updatedAt'
+      ]
     });
     
     res.status(200).json(subcontractors);
@@ -82,29 +94,35 @@ exports.getSubcontractorById = async (req, res) => {
 exports.createSubcontractor = async (req, res) => {
   try {
     const {
-      companyName,
+      name,
       contactName,
-      phoneNumber,
+      phone,
       email,
       address,
-      serviceCategories,
-      description
+      specialties,
+      description,
+      website,
+      status
     } = req.body;
     
     // Validation
-    if (!companyName || !contactName || !phoneNumber || !email) {
-      return res.status(400).json({ message: 'Missing required fields' });
+    if (!name) {
+      return res.status(400).json({ message: 'Company name is required' });
     }
     
     const newSubcontractor = await Subcontractor.create({
-      companyName,
+      name,
       contactName,
-      phoneNumber,
+      phone,
       email,
       address,
-      serviceCategories,
+      specialties,
       description,
-      status: 'active'
+      website,
+      status: status || 'active',
+      letterGrade: 'C', // Default grade for new subcontractors
+      averageRating: 0,
+      reviewCount: 0
     });
     
     res.status(201).json({
@@ -128,7 +146,34 @@ exports.updateSubcontractor = async (req, res) => {
       return res.status(404).json({ message: 'Subcontractor not found' });
     }
     
-    await subcontractor.update(req.body);
+    const {
+      name,
+      contactName,
+      phone,
+      email,
+      address,
+      specialties,
+      description,
+      website,
+      status
+    } = req.body;
+    
+    // Validation
+    if (!name) {
+      return res.status(400).json({ message: 'Company name is required' });
+    }
+    
+    await subcontractor.update({
+      name,
+      contactName,
+      phone,
+      email,
+      address,
+      specialties,
+      description,
+      website,
+      status
+    });
     
     res.status(200).json({
       message: 'Subcontractor updated successfully',
