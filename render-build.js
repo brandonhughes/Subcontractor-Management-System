@@ -269,9 +269,9 @@ echo "Current directory: $(pwd)"
 echo "Files in directory:"
 ls -la
 
-# Start the render-start.js script which ensures port binding
-# This script starts a simple HTTP server and then launches the main server
-node render-start.js
+# Start the server directly, with additional logging
+echo "Starting server directly..."
+node server.js
 `;
 
 fs.writeFileSync(

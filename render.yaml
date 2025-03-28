@@ -5,8 +5,8 @@ services:
     env: node
     region: oregon
     plan: free
-    buildCommand: npm install && node render-build.js && cd render-build && npm install && npm run build:all
-    startCommand: cd render-build && bash startup.sh
+    buildCommand: npm install && npm run build:render
+    startCommand: npm start
     # Explicitly set to the port Render expects (10000)
     # Set health check path to ensure Render can detect the service
     healthCheckPath: /health
