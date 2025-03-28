@@ -19,7 +19,8 @@ app.get('/', (req, res) => {
   });
 });
 
-// Start the server
-app.listen(port, () => {
-  console.log(`Server is listening on port ${port}`);
+// Start the server - explicitly binding to all interfaces (0.0.0.0)
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Server is listening on port ${port} on all interfaces (0.0.0.0)`);
+  console.log(`Server running at http://localhost:${port}/`);
 });
