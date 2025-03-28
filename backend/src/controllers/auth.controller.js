@@ -3,6 +3,7 @@ const { generateToken } = require('../utils/jwt');
 const bcrypt = require('bcryptjs');
 const logger = require('../utils/logger');
 const { validationResult } = require('express-validator');
+const { Op } = require('sequelize');
 
 /**
  * User registration
@@ -22,7 +23,7 @@ const register = async (req, res) => {
     // Check if username or email already exists
     const existingUser = await User.findOne({
       where: {
-        [User.sequelize.Op.or]: [{ username }, { email }]
+        [Op.or]: [{ username }, { email }]
       }
     });
 
@@ -83,7 +84,7 @@ const login = async (req, res) => {
     // Find user by username or email
     const user = await User.findOne({
       where: {
-        [User.sequelize.Op.or]: [
+        [Op.or]: [
           { username },
           { email: username } // Allow login with email in username field
         ]

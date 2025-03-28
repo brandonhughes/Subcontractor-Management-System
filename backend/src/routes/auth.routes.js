@@ -37,8 +37,8 @@ const registerValidation = [
 // Login validation
 const loginValidation = [
   body('username')
-    .isLength({ min: 3, max: 50 })
-    .withMessage('Username must be between 3 and 50 characters'),
+    .isString()
+    .withMessage('Username or email is required'),
   body('password')
     .isLength({ min: 6 })
     .withMessage('Password must be at least 6 characters long')
