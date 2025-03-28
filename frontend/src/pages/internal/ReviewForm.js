@@ -65,19 +65,20 @@ const ReviewForm = () => {
         setQuestionsWithResponses(initialQuestions);
         
         // If we're editing an existing review, fetch it
+        let reviewData = null;
         if (reviewId) {
           const reviewResponse = await apiService.getReview(reviewId);
-          const review = reviewResponse.data;
+          reviewData = reviewResponse.data;
           
-          if (review) {
-            setSelectedSubcontractorId(review.subcontractorId);
-            setGeneralComments(review.comments || '');
-            setProjectName(review.projectName || '');
-            setProjectDate(review.projectDate ? new Date(review.projectDate).toISOString().split('T')[0] : '');
+          if (reviewData) {
+            setSelectedSubcontractorId(reviewData.subcontractorId);
+            setGeneralComments(reviewData.comments || '');
+            setProjectName(reviewData.projectName || '');
+            setProjectDate(reviewData.projectDate ? new Date(reviewData.projectDate).toISOString().split('T')[0] : '');
             
             // Map the responses to our questions
             const questionsWithExistingResponses = initialQuestions.map(question => {
-              const existingResponse = review.responses.find(r => r.questionId === question.id);
+              const existingResponse = reviewData.responses.find(r => r.questionId === question.id);
               if (existingResponse) {
                 return {
                   ...question,
@@ -95,8 +96,8 @@ const ReviewForm = () => {
         }
         
         // If we have a subcontractor ID from URL or existing review, fetch that subcontractor
-        if (urlSubcontractorId || (reviewId && review?.subcontractorId)) {
-          const subcontractorToUse = urlSubcontractorId || review?.subcontractorId;
+        if (urlSubcontractorId || (reviewId && reviewData?.subcontractorId)) {
+          const subcontractorToUse = urlSubcontractorId || reviewData?.subcontractorId;
           const subcontractorResponse = await apiService.getSubcontractor(subcontractorToUse);
           setSelectedSubcontractor(subcontractorResponse.data);
         }
