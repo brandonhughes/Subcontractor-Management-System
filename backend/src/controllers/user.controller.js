@@ -127,31 +127,44 @@ exports.getUserById = async (req, res) => {
 // Create user (admin only)
 exports.createUser = async (req, res) => {
   try {
-    const { name, email, password, role, department, phoneNumber } = req.body;
+    const { 
+      username, 
+      email, 
+      password, 
+      firstName, 
+      lastName, 
+      role, 
+      department, 
+      status 
+    } = req.body;
     
     // Validate required fields
-    if (!name || !email || !password) {
-      return res.status(400).json({ message: 'Name, email, and password are required' });
+    if (!username || !email || !password) {
+      return res.status(400).json({ message: 'Username, email, and password are required' });
     }
     
     // Check if email already exists
-    const existingUser = await User.findOne({ where: { email } });
-    
-    if (existingUser) {
+    const existingUserByEmail = await User.findOne({ where: { email } });
+    if (existingUserByEmail) {
       return res.status(400).json({ message: 'Email is already in use' });
     }
     
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Check if username already exists
+    const existingUserByUsername = await User.findOne({ where: { username } });
+    if (existingUserByUsername) {
+      return res.status(400).json({ message: 'Username is already in use' });
+    }
     
-    // Create user
+    // Create user (password hashing is handled by model hooks)
     const user = await User.create({
-      name,
+      username,
       email,
-      password: hashedPassword,
-      role: role || 'user',
+      password,
+      firstName,
+      lastName,
+      role: role || 'internal',
       department,
-      phoneNumber
+      status: status || 'active'
     });
     
     const newUser = await User.findByPk(user.id, {
@@ -164,6 +177,12 @@ exports.createUser = async (req, res) => {
     });
   } catch (error) {
     logger.error('Error creating user:', error);
+    if (error.name === 'SequelizeValidationError') {
+      return res.status(400).json({ 
+        message: 'Validation error', 
+        errors: error.errors.map(e => e.message) 
+      });
+    }
     res.status(500).json({ message: 'Failed to create user' });
   }
 };
