@@ -102,7 +102,11 @@ const rootPackageJson = {
     'dotenv': '^16.0.3',
     'multer': '^1.4.5-lts.1',
     'winston': '^3.8.2',
-    'express-validator': '^7.0.1'
+    'express-validator': '^7.0.1',
+    'http': '^0.0.1-security'
+  },
+  engines: {
+    "node": ">=16.0.0"
   }
 };
 
@@ -111,16 +115,72 @@ fs.writeFileSync(
   JSON.stringify(rootPackageJson, null, 2)
 );
 
+// Create the render-start.js script
+console.log('Creating render-start.js script...');
+const renderStartScript = `
+// This script is a simple HTTP server that listens on the PORT environment variable
+// It's a backup in case the main server script doesn't properly bind to the port
+
+const http = require('http');
+const port = process.env.PORT || 10000;
+
+console.log('Starting simple HTTP server on port', port);
+
+const server = http.createServer((req, res) => {
+  console.log('Received request:', req.method, req.url);
+  
+  res.writeHead(200, {'Content-Type': 'application/json'});
+  res.end(JSON.stringify({
+    status: 'OK',
+    message: 'Render deployment port detection server',
+    port: port,
+    env: process.env.NODE_ENV,
+    time: new Date().toISOString()
+  }));
+});
+
+server.listen(port, '0.0.0.0', () => {
+  console.log(\`Server listening on port \${port}\`);
+  console.log(\`Server address: \${JSON.stringify(server.address())}\`);
+});
+
+server.on('error', (err) => {
+  console.error('Server error:', err);
+});
+
+// Start the main server script after a short delay
+setTimeout(() => {
+  console.log('Starting main server script...');
+  try {
+    require('./server.js');
+  } catch (err) {
+    console.error('Error starting main server:', err);
+  }
+}, 5000);
+`;
+
+fs.writeFileSync(
+  path.join(buildDir, 'render-start.js'),
+  renderStartScript
+);
+
 // Create the server script
 const serverScript = `
 const express = require('express');
 const path = require('path');
 const compression = require('compression');
 const cors = require('cors');
-const { exec } = require('child_process');
+const http = require('http');
+require('dotenv').config();
 
 const app = express();
+
+// IMPORTANT: Render looks for applications listening on port 10000 by default
 const PORT = process.env.PORT || 10000;
+
+// Log startup for debugging
+console.log("Starting server with PORT:", PORT);
+console.log("Environment:", process.env.NODE_ENV);
 
 // Enable CORS
 app.use(cors());
@@ -132,14 +192,29 @@ app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Set up backend API routes under /api
-app.use('/api', require('./backend/src/routes'));
+// Create health check endpoint at root that Render can detect
+app.get('/', (req, res) => {
+  res.json({ status: 'ok', message: 'Server is running' });
+});
+
+// Add another health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', message: 'Server is healthy' });
+});
 
 // Create uploads directory if it doesn't exist
 const fs = require('fs');
 const uploadsDir = process.env.UPLOAD_DIR || 'uploads';
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+try {
+  // Set up backend API routes under /api
+  app.use('/api', require('./backend/src/routes'));
+  console.log("API routes loaded successfully");
+} catch (error) {
+  console.error("Error loading API routes:", error);
 }
 
 // Serve static files from the frontend build directory
@@ -153,11 +228,21 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend', 'build', 'index.html'));
 });
 
-// Start the server
-app.listen(PORT, () => {
+// Create HTTP server - required for Render to detect port binding
+const server = http.createServer(app);
+
+// Start the server and bind to the correct port
+server.listen(PORT, '0.0.0.0', () => {
   console.log(\`Server running on port \${PORT}\`);
   console.log(\`API available at http://localhost:\${PORT}/api\`);
   console.log(\`Frontend available at http://localhost:\${PORT}\`);
+  console.log(\`Server hostname: \${server.address().address}\`);
+  console.log(\`Server port: \${server.address().port}\`);
+});
+
+// Handle server errors
+server.on('error', (error) => {
+  console.error('Server error:', error);
 });
 `;
 
@@ -169,8 +254,38 @@ fs.writeFileSync(
 // Copy Procfile
 fs.writeFileSync(
   path.join(buildDir, 'Procfile'),
-  'web: npm start'
+  'web: bash startup.sh'
 );
+
+// Create startup script with execute permissions
+console.log('Creating startup script...');
+const startupScript = `#!/bin/bash
+
+# Log environment details
+echo "***** STARTUP SCRIPT *****"
+echo "PORT: $PORT"
+echo "NODE_ENV: $NODE_ENV"
+echo "Current directory: $(pwd)"
+echo "Files in directory:"
+ls -la
+
+# Start the render-start.js script which ensures port binding
+# This script starts a simple HTTP server and then launches the main server
+node render-start.js
+`;
+
+fs.writeFileSync(
+  path.join(buildDir, 'startup.sh'),
+  startupScript
+);
+
+// Make startup script executable
+try {
+  fs.chmodSync(path.join(buildDir, 'startup.sh'), '755');
+  console.log('Made startup script executable');
+} catch (error) {
+  console.error('Error making startup script executable:', error);
+}
 
 // Create a .env file with essential environment variables
 console.log('Creating environment file...');
