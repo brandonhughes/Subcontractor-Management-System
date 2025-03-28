@@ -26,6 +26,7 @@ Instructions for setting up the development environment will be added soon.
 See the following documents for detailed information:
 - [Requirements Document](requirements.md)
 - [Project Summary](SUMMARY.md)
+- [AI_RULES](AI_RULES.md)
 
 ## License
 

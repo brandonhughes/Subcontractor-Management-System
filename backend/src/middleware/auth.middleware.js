@@ -63,7 +63,23 @@ const authorize = (roles = []) => {
   };
 };
 
+/**
+ * Check if user is an admin
+ */
+const isAdmin = (req, res, next) => {
+  if (!req.user) {
+    return res.status(401).json({ message: 'User not authenticated' });
+  }
+
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ message: 'Unauthorized: Admin privileges required' });
+  }
+
+  next();
+};
+
 module.exports = {
-  authenticate,
-  authorize
+  authMiddleware: authenticate,
+  authorize,
+  isAdmin
 };

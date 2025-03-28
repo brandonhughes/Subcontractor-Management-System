@@ -5,19 +5,21 @@ const dbConfig = require('../config/database');
 const logger = require('../utils/logger');
 
 const basename = path.basename(__filename);
+const env = process.env.NODE_ENV || 'development';
+const config = dbConfig[env];
 const db = {};
 
 // Create Sequelize instance
 const sequelize = new Sequelize(
-  dbConfig.database,
-  dbConfig.username,
-  dbConfig.password,
+  config.database,
+  config.username,
+  config.password,
   {
-    host: dbConfig.host,
-    port: dbConfig.port,
-    dialect: dbConfig.dialect,
-    logging: dbConfig.logging,
-    pool: dbConfig.pool
+    host: config.host,
+    port: config.port,
+    dialect: config.dialect,
+    logging: config.logging,
+    pool: config.pool
   }
 );
 
@@ -27,7 +29,10 @@ const sequelize = new Sequelize(
     await sequelize.authenticate();
     logger.info('Database connection has been established successfully.');
   } catch (error) {
-    logger.error('Unable to connect to the database:', error);
+    logger.warn('Unable to connect to the database:', error);
+    logger.info('Continuing without database connection. Some features may not work correctly.');
+    logger.info('Please verify PostgreSQL credentials and configuration:');
+    logger.info(`Host: ${config.host}, Port: ${config.port}, Database: ${config.database}, User: ${config.username}`);
   }
 })();
 

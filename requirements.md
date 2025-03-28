@@ -11,33 +11,33 @@ A feedback-based platform for internal users to evaluate and rate subcontractors
 ## Functional Requirements
 
 ### User Management
-- [To Do] User registration and authentication
-- [To Do] Role-based access (Admin, Internal User)
-- [To Do] Profile management
+- [Done] User registration and authentication
+- [Done] Role-based access (Admin, Internal User)
+- [Done] Profile management
 
 ### Subcontractor Management (Admin Only)
-- [To Do] Subcontractor profile creation and management
-- [To Do] Contact information and business details
-- [To Do] Service categories and specialties
-- [To Do] Document upload capability (certifications, licenses, etc.)
-- [To Do] Active/inactive status management
+- [Done] Subcontractor profile creation and management
+- [Done] Contact information and business details
+- [Done] Service categories and specialties
+- [Done] Document upload capability (certifications, licenses, etc.)
+- [Done] Active/inactive status management
 
 ### Review System (Internal Users)
-- [To Do] Structured questionnaire for rating subcontractors
-- [To Do] Free-form text fields for detailed feedback
-- [To Do] Rating system (e.g., 1-5 stars)
-- [To Do] Ability to upload photos or documentation
-- [To Do] Edit/update review capabilities
+- [Done] Structured questionnaire for rating subcontractors
+- [Done] Free-form text fields for detailed feedback
+- [Done] Rating system (e.g., 1-5 stars)
+- [Done] Ability to upload photos or documentation
+- [Done] Edit/update review capabilities
 
 ### Feedback Aggregation
-- [To Do] Main view displaying aggregated ratings and reviews
+- [In Progress] Main view displaying aggregated ratings and reviews
 - [To Do] Filtering and sorting capabilities
 - [To Do] Statistical summary of ratings
 - [To Do] Trending analysis of subcontractor performance
 - [To Do] Highlight recent or notable reviews
-- [To Do] Weighted calculation for overall "Subcontractor Score"
-- [To Do] Letter grade display (A, B, C, D, or F) prominently featured on profile page
-- [To Do] Configurable weighting formula for administrators
+- [Done] Weighted calculation for overall "Subcontractor Score"
+- [Done] Letter grade display (A, B, C, D, or F) prominently featured on profile page
+- [Done] Configurable weighting formula for administrators
 
 ### Reporting
 - [To Do] Subcontractor performance dashboards
@@ -51,20 +51,20 @@ A feedback-based platform for internal users to evaluate and rate subcontractors
 - [In Progress] React-based responsive web application
 - [In Progress] Material UI for consistent design
 - [In Progress] TypeScript for type safety
-- [In Progress] State management using React Context or Redux
+- [In Progress] State management using React Context
 
 ### Backend
 - [In Progress] Node.js with Express
-- [In Progress] RESTful API architecture
+- [Done] RESTful API architecture
 - [In Progress] PostgreSQL database
 - [In Progress] Sequelize ORM for database interactions
-- [In Progress] JWT authentication
+- [Done] JWT authentication
 
 ### Security
-- [To Do] Data encryption
-- [To Do] Secure password handling
-- [To Do] Role-based access control
-- [To Do] OWASP security best practices
+- [In Progress] Data encryption
+- [Done] Secure password handling
+- [Done] Role-based access control
+- [In Progress] OWASP security best practices
 
 ## Non-Functional Requirements
 

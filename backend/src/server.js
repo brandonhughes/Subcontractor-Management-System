@@ -6,9 +6,10 @@ const logger = require('./utils/logger');
 
 // Import routes
 const authRoutes = require('./routes/auth.routes');
-// const userRoutes = require('./routes/user.routes');
-// const subcontractorRoutes = require('./routes/subcontractor.routes');
-// const reviewRoutes = require('./routes/review.routes');
+const userRoutes = require('./routes/user.routes');
+const subcontractorRoutes = require('./routes/subcontractor.routes');
+const reviewRoutes = require('./routes/review.routes');
+const questionRoutes = require('./routes/question.routes');
 
 // Initialize Express app
 const app = express();
@@ -26,9 +27,10 @@ app.get('/', (req, res) => {
 
 // Apply routes
 app.use('/api/auth', authRoutes);
-// app.use('/api/users', userRoutes);
-// app.use('/api/subcontractors', subcontractorRoutes);
-// app.use('/api/reviews', reviewRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/subcontractors', subcontractorRoutes);
+app.use('/api/reviews', reviewRoutes);
+app.use('/api/questions', questionRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
