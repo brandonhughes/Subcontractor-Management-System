@@ -22,7 +22,6 @@ const UserManagement = () => {
   const [openAddDialog, setOpenAddDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [openResetPasswordDialog, setOpenResetPasswordDialog] = useState(false);
   
   // Form state
   const [formData, setFormData] = useState({
@@ -34,7 +33,8 @@ const UserManagement = () => {
     lastName: '',
     role: 'internal',
     department: '',
-    status: 'active'
+    status: 'active',
+    changePassword: false
   });
   
   // Selected user for edit/delete/reset
@@ -92,7 +92,8 @@ const UserManagement = () => {
       lastName: '',
       role: 'internal',
       department: '',
-      status: 'active'
+      status: 'active',
+      changePassword: false
     });
   };
 
@@ -119,7 +120,8 @@ const UserManagement = () => {
       department: user.department || '',
       status: user.status,
       password: '',
-      confirmPassword: ''
+      confirmPassword: '',
+      changePassword: false
     });
     setOpenEditDialog(true);
   };
@@ -140,21 +142,7 @@ const UserManagement = () => {
     setOpenDeleteDialog(false);
   };
 
-  // Open reset password dialog
-  const handleOpenResetPasswordDialog = (user) => {
-    setSelectedUser(user);
-    setFormData({
-      ...formData,
-      password: '',
-      confirmPassword: ''
-    });
-    setOpenResetPasswordDialog(true);
-  };
-
-  // Close reset password dialog
-  const handleCloseResetPasswordDialog = () => {
-    setOpenResetPasswordDialog(false);
-  };
+  // Reset password functionality moved to Edit User dialog
 
   // Show snackbar notification
   const showSnackbar = (message, severity = 'success') => {
@@ -212,6 +200,19 @@ const UserManagement = () => {
   const handleUpdateUser = async () => {
     if (!selectedUser) return;
 
+    // Validate password if changing it
+    if (formData.changePassword) {
+      if (!formData.password) {
+        showSnackbar('Password is required', 'error');
+        return;
+      }
+      
+      if (formData.password !== formData.confirmPassword) {
+        showSnackbar('Passwords do not match', 'error');
+        return;
+      }
+    }
+
     try {
       const userData = {
         username: formData.username,
@@ -222,6 +223,11 @@ const UserManagement = () => {
         department: formData.department,
         status: formData.status
       };
+
+      // If changing password, add it to the update data
+      if (formData.changePassword && formData.password) {
+        userData.password = formData.password;
+      }
 
       const response = await apiService.updateUser(selectedUser.id, userData);
       showSnackbar('User updated successfully');
@@ -248,24 +254,7 @@ const UserManagement = () => {
     }
   };
 
-  // Reset user password
-  const handleResetPassword = async () => {
-    if (!selectedUser) return;
-
-    if (!formData.password || formData.password !== formData.confirmPassword) {
-      showSnackbar('Passwords do not match or empty', 'error');
-      return;
-    }
-
-    try {
-      await apiService.resetPassword(selectedUser.id, { newPassword: formData.password });
-      showSnackbar('Password reset successfully');
-      handleCloseResetPasswordDialog();
-    } catch (err) {
-      console.error('Error resetting password:', err);
-      showSnackbar(err.response?.data?.message || 'Failed to reset password', 'error');
-    }
-  };
+  // Password reset functionality integrated into handleUpdateUser
 
   // Handle pagination change
   const handleChangePage = (event, newPage) => {
@@ -382,13 +371,7 @@ const UserManagement = () => {
                         >
                           <EditIcon />
                         </IconButton>
-                        <IconButton 
-                          color="secondary" 
-                          onClick={() => handleOpenResetPasswordDialog(user)}
-                          title="Reset Password"
-                        >
-                          <RefreshIcon />
-                        </IconButton>
+                        {/* Removed separate password reset button since it's now in the edit dialog */}
                         <IconButton 
                           color="error" 
                           onClick={() => handleOpenDeleteDialog(user)}
@@ -589,6 +572,50 @@ const UserManagement = () => {
                 <MenuItem value="inactive">Inactive</MenuItem>
               </Select>
             </FormControl>
+            
+            {/* Password change option */}
+            <FormControlLabel
+              control={
+                <Checkbox
+                  name="changePassword"
+                  checked={formData.changePassword}
+                  onChange={(e) => {
+                    setFormData({
+                      ...formData,
+                      changePassword: e.target.checked,
+                      password: '',
+                      confirmPassword: ''
+                    });
+                  }}
+                />
+              }
+              label="Change Password"
+            />
+            
+            {formData.changePassword && (
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <TextField
+                  name="password"
+                  label="New Password"
+                  type="password"
+                  fullWidth
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  required
+                />
+                <TextField
+                  name="confirmPassword"
+                  label="Confirm Password"
+                  type="password"
+                  fullWidth
+                  value={formData.confirmPassword}
+                  onChange={handleInputChange}
+                  required
+                  error={formData.password !== formData.confirmPassword && formData.confirmPassword !== ''}
+                  helperText={formData.password !== formData.confirmPassword && formData.confirmPassword !== '' ? 'Passwords do not match' : ''}
+                />
+              </Box>
+            )}
           </Box>
         </DialogContent>
         <DialogActions>
@@ -611,41 +638,7 @@ const UserManagement = () => {
         </DialogActions>
       </Dialog>
 
-      {/* Reset Password Dialog */}
-      <Dialog open={openResetPasswordDialog} onClose={handleCloseResetPasswordDialog} maxWidth="sm" fullWidth>
-        <DialogTitle>Reset Password</DialogTitle>
-        <DialogContent>
-          <DialogContentText sx={{ mb: 2 }}>
-            Reset password for user "{selectedUser?.username}"
-          </DialogContentText>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <TextField
-              required
-              name="password"
-              label="New Password"
-              type="password"
-              fullWidth
-              value={formData.password}
-              onChange={handleInputChange}
-            />
-            <TextField
-              required
-              name="confirmPassword"
-              label="Confirm Password"
-              type="password"
-              fullWidth
-              value={formData.confirmPassword}
-              onChange={handleInputChange}
-              error={formData.password !== formData.confirmPassword && formData.confirmPassword !== ''}
-              helperText={formData.password !== formData.confirmPassword && formData.confirmPassword !== '' ? 'Passwords do not match' : ''}
-            />
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseResetPasswordDialog}>Cancel</Button>
-          <Button onClick={handleResetPassword} variant="contained">Reset Password</Button>
-        </DialogActions>
-      </Dialog>
+      {/* Reset Password Dialog removed - functionality integrated into Edit User Dialog */}
 
       {/* Snackbar for notifications */}
       <Snackbar 

@@ -172,7 +172,16 @@ exports.createUser = async (req, res) => {
 exports.updateUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, email, role, department, phoneNumber, active } = req.body;
+    const { 
+      username, 
+      email, 
+      firstName, 
+      lastName, 
+      role, 
+      department, 
+      status, 
+      password 
+    } = req.body;
     
     const user = await User.findByPk(id);
     
@@ -180,15 +189,26 @@ exports.updateUser = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
     
-    // Update user
-    await user.update({
-      name,
+    // Prepare update data
+    const updateData = {
+      username,
       email,
+      firstName,
+      lastName,
       role,
       department,
-      phoneNumber,
-      active
-    });
+      status
+    };
+
+    // If password is provided, hash it
+    if (password) {
+      logger.info(`Updating password for user ${id}`);
+      const hashedPassword = await bcrypt.hash(password, 10);
+      updateData.password = hashedPassword;
+    }
+    
+    // Update user
+    await user.update(updateData);
     
     const updatedUser = await User.findByPk(id, {
       attributes: { exclude: ['password'] }
