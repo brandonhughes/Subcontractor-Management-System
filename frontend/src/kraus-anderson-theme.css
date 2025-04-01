@@ -1,0 +1,349 @@
+/* Kraus Anderson Inspired Theme CSS */
+
+:root {
+  /* Color Palette */
+  --ka-red: #e12726;
+  --ka-dark-red: #b31e1d;
+  --ka-dark-blue: #002654;
+  --ka-medium-blue: #14406b;
+  --ka-light-blue: #3771b0;
+  --ka-grey: #62727b;
+  --ka-light-grey: #f1f1f1;
+  --ka-dark-grey: #333333;
+  --ka-white: #ffffff;
+  --ka-black: #000000;
+
+  /* Typography */
+  --ka-font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
+  --ka-heading-font: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Global Styles */
+body {
+  font-family: var(--ka-font-family);
+  background-color: var(--ka-white);
+  color: var(--ka-dark-grey);
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--ka-heading-font);
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--ka-dark-blue);
+}
+
+h1 {
+  font-size: 2.5rem;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+h3 {
+  font-size: 1.75rem;
+}
+
+h4 {
+  font-size: 1.5rem;
+}
+
+h5 {
+  font-size: 1.25rem;
+}
+
+h6 {
+  font-size: 1rem;
+}
+
+a {
+  color: var(--ka-light-blue);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--ka-dark-blue);
+  text-decoration: underline;
+}
+
+/* Button Styles */
+.ka-btn {
+  background-color: var(--ka-red);
+  color: var(--ka-white);
+  border: none;
+  border-radius: 0;
+  padding: 0.75rem 1.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+}
+
+.ka-btn:hover {
+  background-color: var(--ka-dark-red);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ka-btn-secondary {
+  background-color: var(--ka-dark-blue);
+  color: var(--ka-white);
+}
+
+.ka-btn-secondary:hover {
+  background-color: var(--ka-medium-blue);
+}
+
+.ka-btn-outline {
+  background-color: transparent;
+  color: var(--ka-red);
+  border: 2px solid var(--ka-red);
+}
+
+.ka-btn-outline:hover {
+  background-color: var(--ka-red);
+  color: var(--ka-white);
+}
+
+/* Header Styles */
+.ka-header {
+  background-color: var(--ka-white);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem 0;
+  position: fixed;
+  width: 100%;
+  z-index: 1000;
+}
+
+.ka-logo {
+  height: 50px;
+}
+
+.ka-nav-link {
+  color: var(--ka-dark-grey);
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 0.5rem 1rem;
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease;
+}
+
+.ka-nav-link:hover,
+.ka-nav-link.active {
+  color: var(--ka-red);
+  text-decoration: none;
+}
+
+/* Card Styles */
+.ka-card {
+  border-radius: 0;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  margin-bottom: 2rem;
+  overflow: hidden;
+}
+
+.ka-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.ka-card-img-top {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.ka-card-title {
+  color: var(--ka-dark-blue);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.ka-card-text {
+  color: var(--ka-grey);
+  margin-bottom: 1.5rem;
+}
+
+/* Form Styles */
+.ka-form-control {
+  border-radius: 0;
+  border: 1px solid var(--ka-grey);
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.ka-form-control:focus {
+  border-color: var(--ka-light-blue);
+  box-shadow: 0 0 0 0.25rem rgba(55, 113, 176, 0.25);
+}
+
+.ka-form-label {
+  font-weight: 600;
+  color: var(--ka-dark-blue);
+  margin-bottom: 0.5rem;
+}
+
+/* Table Styles */
+.ka-table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.ka-table th {
+  background-color: var(--ka-light-grey);
+  color: var(--ka-dark-blue);
+  font-weight: 700;
+  text-align: left;
+  padding: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ka-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--ka-light-grey);
+}
+
+.ka-table tr:hover {
+  background-color: rgba(55, 113, 176, 0.05);
+}
+
+/* Alert Styles */
+.ka-alert {
+  border-radius: 0;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border: none;
+}
+
+.ka-alert-success {
+  background-color: #d4edda;
+  color: #155724;
+  border-left: 4px solid #28a745;
+}
+
+.ka-alert-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+  border-left: 4px solid #dc3545;
+}
+
+.ka-alert-warning {
+  background-color: #fff3cd;
+  color: #856404;
+  border-left: 4px solid #ffc107;
+}
+
+.ka-alert-info {
+  background-color: #d1ecf1;
+  color: #0c5460;
+  border-left: 4px solid #17a2b8;
+}
+
+/* Letter Grade Styles */
+.ka-letter-grade {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  font-weight: bold;
+  font-size: 1.5rem;
+  border-radius: 50%;
+  color: white;
+}
+
+.ka-grade-a {
+  background-color: #28a745;
+}
+
+.ka-grade-b {
+  background-color: #3771b0;
+}
+
+.ka-grade-c {
+  background-color: #ffc107;
+}
+
+.ka-grade-d {
+  background-color: #fd7e14;
+}
+
+.ka-grade-f {
+  background-color: #e12726;
+}
+
+/* Footer Styles */
+.ka-footer {
+  background-color: var(--ka-dark-blue);
+  color: var(--ka-white);
+  padding: 3rem 0;
+}
+
+.ka-footer-title {
+  color: var(--ka-white);
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.ka-footer-link {
+  color: var(--ka-light-grey);
+  transition: color 0.3s ease;
+}
+
+.ka-footer-link:hover {
+  color: var(--ka-red);
+  text-decoration: none;
+}
+
+.ka-social-icon {
+  color: var(--ka-white);
+  font-size: 1.5rem;
+  margin-right: 1rem;
+  transition: all 0.3s ease;
+}
+
+.ka-social-icon:hover {
+  color: var(--ka-red);
+  transform: translateY(-3px);
+}
+
+/* Custom utility classes */
+.ka-text-red {
+  color: var(--ka-red) !important;
+}
+
+.ka-text-blue {
+  color: var(--ka-dark-blue) !important;
+}
+
+.ka-bg-red {
+  background-color: var(--ka-red) !important;
+}
+
+.ka-bg-blue {
+  background-color: var(--ka-dark-blue) !important;
+}
+
+.ka-bg-light-grey {
+  background-color: var(--ka-light-grey) !important;
+}
+
+/* Elevation and shadow utilities */
+.ka-shadow-sm {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.ka-shadow {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.ka-shadow-lg {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15) !important;
+}

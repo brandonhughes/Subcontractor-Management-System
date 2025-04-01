@@ -91,7 +91,7 @@ export default function Login() {
         {/* Right side - Login Form */}
         <Grid item xs={12} md={6}>
           <Box sx={{ p: 5, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
+            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
@@ -141,7 +141,7 @@ export default function Login() {
             control={
               <Checkbox 
                 value="remember" 
-                color="primary" 
+                color="secondary" 
                 name="remember"
                 checked={formik.values.remember}
                 onChange={formik.handleChange}
@@ -153,6 +153,7 @@ export default function Login() {
             type="submit"
             fullWidth
             variant="contained"
+            color="secondary"
             sx={{ mt: 3, mb: 2 }}
             disabled={loading}
           >
@@ -160,12 +161,12 @@ export default function Login() {
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link component={RouterLink} to="#" variant="body2">
+              <Link component={RouterLink} to="#" variant="body2" sx={{ color: 'secondary.main' }}>
                 Forgot password?
               </Link>
             </Grid>
             <Grid item>
-              <Link component={RouterLink} to="/register" variant="body2">
+              <Link component={RouterLink} to="/register" variant="body2" sx={{ color: 'secondary.main' }}>
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>

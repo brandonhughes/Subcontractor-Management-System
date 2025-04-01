@@ -1,10 +1,27 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@300;400;600;700&display=swap');
+
+/* Define color variables for Kraus Anderson theme */
+:root {
+  --ka-red: #e12726;
+  --ka-dark-red: #b31e1d;
+  --ka-dark-blue: #002654;
+  --ka-medium-blue: #14406b;
+  --ka-light-blue: #3771b0;
+  --ka-grey: #62727b;
+  --ka-light-grey: #f1f1f1;
+  --ka-dark-grey: #333333;
+  --ka-white: #ffffff;
+  --ka-black: #000000;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: var(--ka-dark-grey);
+  line-height: 1.6;
 }
 
 code {
@@ -12,35 +29,166 @@ code {
     monospace;
 }
 
-/* Custom Styles */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 700;
+  color: var(--ka-dark-blue);
+}
+
+/* Letter grade styles */
 .letter-grade {
-  display: inline-block;
-  width: 40px;
-  height: 40px;
-  line-height: 40px;
-  text-align: center;
-  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
+  font-weight: bold;
+  font-size: 1.5rem;
   color: white;
 }
 
 .grade-a {
-  background-color: #4caf50;
+  background-color: #28a745;
 }
 
 .grade-b {
-  background-color: #8bc34a;
+  background-color: var(--ka-light-blue);
 }
 
 .grade-c {
-  background-color: #ffeb3b;
+  background-color: #ffc107;
   color: #000;
 }
 
 .grade-d {
-  background-color: #ff9800;
+  background-color: #fd7e14;
 }
 
 .grade-f {
-  background-color: #f44336;
+  background-color: var(--ka-red);
+}
+
+/* Custom utility classes */
+.ka-text-red {
+  color: var(--ka-red) !important;
+}
+
+.ka-text-blue {
+  color: var(--ka-dark-blue) !important;
+}
+
+.ka-bg-red {
+  background-color: var(--ka-red) !important;
+}
+
+.ka-bg-blue {
+  background-color: var(--ka-dark-blue) !important;
+}
+
+.ka-bg-light-grey {
+  background-color: var(--ka-light-grey) !important;
+}
+
+/* Banner and section styles */
+.ka-banner {
+  background-color: var(--ka-dark-blue);
+  color: var(--ka-white);
+  padding: 3rem 0;
+  position: relative;
+}
+
+.ka-banner h1,
+.ka-banner h2,
+.ka-banner h3 {
+  color: var(--ka-white);
+}
+
+.ka-banner::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background-color: var(--ka-red);
+}
+
+.ka-section {
+  padding: 4rem 0;
+}
+
+.ka-section-title {
+  position: relative;
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+}
+
+.ka-section-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100px;
+  height: 3px;
+  background-color: var(--ka-red);
+}
+
+/* Button styles */
+.ka-btn {
+  display: inline-block;
+  background-color: var(--ka-red);
+  color: var(--ka-white);
+  border: none;
+  border-radius: 0;
+  padding: 0.75rem 1.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  cursor: pointer;
+  text-align: center;
+}
+
+.ka-btn:hover {
+  background-color: var(--ka-dark-red);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+  color: var(--ka-white);
+}
+
+.ka-btn-secondary {
+  background-color: var(--ka-dark-blue);
+  color: var(--ka-white);
+}
+
+.ka-btn-secondary:hover {
+  background-color: var(--ka-medium-blue);
+}
+
+.ka-btn-outline {
+  background-color: transparent;
+  color: var(--ka-red);
+  border: 2px solid var(--ka-red);
+}
+
+.ka-btn-outline:hover {
+  background-color: var(--ka-red);
+  color: var(--ka-white);
+}
+
+/* Other utility classes */
+.ka-shadow {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.ka-shadow-hover {
+  transition: all 0.3s ease;
+}
+
+.ka-shadow-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
