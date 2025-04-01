@@ -71,7 +71,9 @@ const calculateScore = async (subcontractorId) => {
     reviews.forEach(review => {
       review.responses.forEach(response => {
         const weight = response.question.weight || 1;
-        totalWeightedScore += response.value * weight;
+        // Make sure we're using the score field
+        const responseScore = response.score || 0;
+        totalWeightedScore += responseScore * weight;
         totalWeight += weight;
       });
     });
@@ -150,18 +152,34 @@ exports.getReviewsBySubcontractorId = async (req, res) => {
 // Create review
 exports.createReview = async (req, res) => {
   try {
-    const { subcontractorId, comments, responses } = req.body;
+    const { subcontractorId, comments, projectName, projectDate, responses } = req.body;
     
     // Validate required fields
     if (!subcontractorId || !responses || !Array.isArray(responses) || responses.length === 0) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
     
+    // Calculate overall rating from responses
+    let totalRating = 0;
+    let totalWeights = 0;
+    
+    for (const response of responses) {
+      const question = await Question.findByPk(response.questionId);
+      const weight = question ? (question.weight || 1) : 1;
+      totalRating += (response.score || response.value) * weight;
+      totalWeights += weight;
+    }
+    
+    const overallRating = Math.round(totalWeights > 0 ? totalRating / totalWeights : 3);
+    
     // Create review
     const review = await Review.create({
       subcontractorId,
-      userId: req.user.id,
-      comments
+      reviewerId: req.user.id, // Use reviewerId instead of userId to match the model
+      overallRating: Math.min(Math.max(overallRating, 1), 5), // Ensure rating is between 1-5
+      comments,
+      projectName,
+      projectDate
     });
     
     // Create review responses
@@ -169,7 +187,7 @@ exports.createReview = async (req, res) => {
       return ReviewResponse.create({
         reviewId: review.id,
         questionId: response.questionId,
-        value: response.value
+        score: response.score || response.value // Accept either score (from frontend) or value (for backward compatibility)
       });
     }));
     
@@ -193,7 +211,7 @@ exports.createReview = async (req, res) => {
 exports.updateReview = async (req, res) => {
   try {
     const { id } = req.params;
-    const { comments, responses } = req.body;
+    const { comments, projectName, projectDate, responses } = req.body;
     
     const review = await Review.findByPk(id);
     
@@ -202,18 +220,15 @@ exports.updateReview = async (req, res) => {
     }
     
     // Check if user is the owner of the review or an admin
-    if (review.userId !== req.user.id && req.user.role !== 'admin') {
+    if (review.reviewerId !== req.user.id && req.user.role !== 'admin') {
       return res.status(403).json({ message: 'Unauthorized to update this review' });
     }
     
-    // Update review
-    await review.update({ comments });
-    
-    // Update responses
+    // Update responses first so we can calculate the overall rating
     if (responses && Array.isArray(responses)) {
       for (const response of responses) {
         await ReviewResponse.update(
-          { value: response.value },
+          { score: response.score || response.value }, // Accept either score (from frontend) or value (for backward compatibility)
           {
             where: {
               reviewId: id,
@@ -222,6 +237,38 @@ exports.updateReview = async (req, res) => {
           }
         );
       }
+    
+      // Calculate new overall rating
+      let totalRating = 0;
+      let totalWeights = 0;
+      
+      // Get updated responses
+      const updatedResponses = await ReviewResponse.findAll({
+        where: { reviewId: id },
+        include: [{
+          model: Question,
+          as: 'question'
+        }]
+      });
+      
+      for (const response of updatedResponses) {
+        const weight = response.question ? (response.question.weight || 1) : 1;
+        totalRating += response.score * weight;
+        totalWeights += weight;
+      }
+      
+      const overallRating = Math.round(totalWeights > 0 ? totalRating / totalWeights : 3);
+      
+      // Update review with comments, project details, and new overall rating
+      await review.update({ 
+        comments,
+        projectName,
+        projectDate,
+        overallRating: Math.min(Math.max(overallRating, 1), 5)
+      });
+    } else {
+      // Just update comments and project details if no responses provided
+      await review.update({ comments, projectName, projectDate });
     }
     
     // Recalculate subcontractor score
@@ -299,7 +346,7 @@ exports.uploadAttachment = async (req, res) => {
     }
     
     // Check if user is the owner of the review or an admin
-    if (review.userId !== req.user.id && req.user.role !== 'admin') {
+    if (review.reviewerId !== req.user.id && req.user.role !== 'admin') {
       return res.status(403).json({ message: 'Unauthorized to update this review' });
     }
     
@@ -347,7 +394,7 @@ exports.deleteAttachment = async (req, res) => {
     }
     
     // Check if user is the owner of the review or an admin
-    if (review.userId !== req.user.id && req.user.role !== 'admin') {
+    if (review.reviewerId !== req.user.id && req.user.role !== 'admin') {
       return res.status(403).json({ message: 'Unauthorized to update this review' });
     }
     

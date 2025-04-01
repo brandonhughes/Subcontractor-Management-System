@@ -209,7 +209,7 @@ const ReviewForm = () => {
       
       // Navigate back to dashboard after a delay
       setTimeout(() => {
-        navigate('/internal/dashboard');
+        navigate('/dashboard');
       }, 1500);
     } catch (err) {
       console.error('Error submitting review:', err);
@@ -221,7 +221,7 @@ const ReviewForm = () => {
   
   // Cancel and go back
   const handleCancel = () => {
-    navigate('/internal/dashboard');
+    navigate('/dashboard');
   };
   
   // Calculate overall rating based on responses
@@ -322,19 +322,29 @@ const ReviewForm = () => {
                         readOnly
                         size="small"
                       />
-                      <Chip
-                        label={selectedSubcontractor.letterGrade || 'N/A'}
-                        size="small"
-                        sx={{ ml: 1, fontWeight: 'bold' }}
-                        color={
-                          selectedSubcontractor.letterGrade === 'A' ? 'success' :
-                          selectedSubcontractor.letterGrade === 'B' ? 'primary' :
-                          selectedSubcontractor.letterGrade === 'C' ? 'warning' :
-                          selectedSubcontractor.letterGrade === 'D' ? 'error' :
-                          selectedSubcontractor.letterGrade === 'F' ? 'error' :
-                          'default'
-                        }
-                      />
+                      <Box 
+                        sx={{ 
+                          backgroundColor: 
+                            selectedSubcontractor.letterGrade === 'A' ? '#4CAF50' :
+                            selectedSubcontractor.letterGrade === 'B' ? '#8BC34A' :
+                            selectedSubcontractor.letterGrade === 'C' ? '#FFEB3B' :
+                            selectedSubcontractor.letterGrade === 'D' ? '#FF9800' :
+                            selectedSubcontractor.letterGrade === 'F' ? '#F44336' :
+                            '#9E9E9E',
+                          color: 'white',
+                          width: '40px',
+                          height: '40px',
+                          borderRadius: '50%',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontWeight: 'bold',
+                          fontSize: '1.2rem',
+                          ml: 1
+                        }}
+                      >
+                        {selectedSubcontractor.letterGrade || 'N/A'}
+                      </Box>
                     </Box>
                   )}
                 </Grid>

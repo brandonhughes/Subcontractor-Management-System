@@ -62,22 +62,49 @@ export default function Login() {
   });
 
   return (
-    <Container component="main" maxWidth="xs" sx={{ mt: 8 }}>
-      <Paper elevation={3} sx={{ p: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
+    <Container component="main" maxWidth="lg" sx={{ mt: 4 }}>
+      <Grid container component={Paper} elevation={3} sx={{ minHeight: '600px' }}>
+        {/* Left side - Image */}
+        <Grid 
+          item 
+          xs={12} 
+          md={6} 
+          sx={{ 
+            position: 'relative',
+            display: { xs: 'none', md: 'block' },
+            overflow: 'hidden'
+          }}
+        >
+          <Box
+            component="img"
+            src="/login-image.jpg"
+            alt="Construction workers"
+            sx={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center'
+            }}
+          />
+        </Grid>
         
-        {error && (
-          <Alert severity="error" sx={{ width: '100%', mt: 2 }}>
-            {error}
-          </Alert>
-        )}
-        
-        <Box component="form" onSubmit={formik.handleSubmit} noValidate sx={{ mt: 1, width: '100%' }}>
+        {/* Right side - Login Form */}
+        <Grid item xs={12} md={6}>
+          <Box sx={{ p: 5, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign in
+            </Typography>
+            
+            {error && (
+              <Alert severity="error" sx={{ width: '100%', mt: 2 }}>
+                {error}
+              </Alert>
+            )}
+            
+            <Box component="form" onSubmit={formik.handleSubmit} noValidate sx={{ mt: 1, width: '100%' }}>
           {/* Debug info - remove in production */}
           <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
             API URL: {process.env.REACT_APP_API_URL}
@@ -143,8 +170,10 @@ export default function Login() {
               </Link>
             </Grid>
           </Grid>
-        </Box>
-      </Paper>
+            </Box>
+          </Box>
+        </Grid>
+      </Grid>
       <Box mt={5}>
         <Typography variant="body2" color="text.secondary" align="center">
           {'© '}

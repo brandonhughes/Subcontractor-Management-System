@@ -388,13 +388,14 @@ const SubcontractorList = () => {
                           sx={{ 
                             backgroundColor: getGradeColor(subcontractor.letterGrade),
                             color: 'white',
-                            width: '30px',
-                            height: '30px',
+                            width: '50px',
+                            height: '50px',
                             borderRadius: '50%',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            fontWeight: 'bold'
+                            fontWeight: 'bold',
+                            fontSize: '1.5rem'
                           }}
                         >
                           {subcontractor.letterGrade || 'C'}

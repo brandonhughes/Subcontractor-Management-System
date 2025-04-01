@@ -59,15 +59,16 @@ const SubcontractorCard = ({ subcontractor }) => {
           {subcontractor.letterGrade && (
             <Box 
               sx={{ 
-                width: 36, 
-                height: 36, 
+                width: 50, 
+                height: 50, 
                 borderRadius: '50%', 
                 backgroundColor: getLetterGradeColor(subcontractor.letterGrade),
                 color: 'white',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontWeight: 'bold'
+                fontWeight: 'bold',
+                fontSize: '1.5rem'
               }}
             >
               {subcontractor.letterGrade}
