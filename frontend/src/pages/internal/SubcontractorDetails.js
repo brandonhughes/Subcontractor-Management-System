@@ -657,17 +657,35 @@ const ReviewHistory = ({ reviews, subcontractorId }) => {
                     </TableCell>
                     <TableCell>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Avatar 
-                          sx={{ 
-                            width: 30, 
-                            height: 30, 
-                            mr: 1,
-                            bgcolor: 'secondary.main'
-                          }}
+                        <Tooltip
+                          title={review.reviewer?.email || ''}
+                          placement="top"
+                          arrow
                         >
-                          <PersonIcon fontSize="small" />
-                        </Avatar>
-                        {review.reviewer?.username || 'Anonymous'}
+                          <Avatar 
+                            sx={{ 
+                              width: 30, 
+                              height: 30, 
+                              mr: 1,
+                              bgcolor: 'secondary.main'
+                            }}
+                          >
+                            <PersonIcon fontSize="small" />
+                          </Avatar>
+                        </Tooltip>
+                        <Tooltip
+                          title={review.reviewer?.email || ''}
+                          placement="top"
+                          arrow
+                        >
+                          <Typography variant="body2">
+                            {review.reviewer ? 
+                              (review.reviewer.firstName && review.reviewer.lastName) ? 
+                                `${review.reviewer.firstName} ${review.reviewer.lastName}` :
+                                review.reviewer.username
+                              : 'Anonymous'}
+                          </Typography>
+                        </Tooltip>
                       </Box>
                     </TableCell>
                     <TableCell>{review.projectName || 'Not specified'}</TableCell>
