@@ -30,11 +30,11 @@ A feedback-based platform for internal users to evaluate and rate subcontractors
 - [Done] Edit/update review capabilities
 
 ### Feedback Aggregation
-- [In Progress] Main view displaying aggregated ratings and reviews
-- [To Do] Filtering and sorting capabilities
-- [To Do] Statistical summary of ratings
-- [To Do] Trending analysis of subcontractor performance
-- [To Do] Highlight recent or notable reviews
+- [Done] Main view displaying aggregated ratings and reviews
+- [In Progress] Filtering and sorting capabilities
+- [Done] Statistical summary of ratings
+- [Done] Trending analysis of subcontractor performance
+- [Done] Highlight recent or notable reviews
 - [Done] Weighted calculation for overall "Subcontractor Score"
 - [Done] Letter grade display (A, B, C, D, or F) prominently featured on profile page
 - [Done] Configurable weighting formula for administrators
@@ -48,16 +48,16 @@ A feedback-based platform for internal users to evaluate and rate subcontractors
 ## Technical Requirements
 
 ### Frontend
-- [In Progress] React-based responsive web application
-- [In Progress] Material UI for consistent design
-- [In Progress] TypeScript for type safety
-- [In Progress] State management using React Context
+- [Done] React-based responsive web application
+- [Done] Material UI for consistent design
+- [Done] TypeScript for type safety
+- [Done] State management using React Context
 
 ### Backend
-- [In Progress] Node.js with Express
+- [Done] Node.js with Express
 - [Done] RESTful API architecture
-- [In Progress] PostgreSQL database
-- [In Progress] Sequelize ORM for database interactions
+- [Done] PostgreSQL database
+- [Done] Sequelize ORM for database interactions
 - [Done] JWT authentication
 
 ### Security
@@ -83,7 +83,7 @@ A feedback-based platform for internal users to evaluate and rate subcontractors
 - [To Do] Error logging and monitoring
 
 ### Usability
-- [To Do] Intuitive user interface
-- [To Do] Mobile-responsive design
+- [In Progress] Intuitive user interface
+- [Done] Mobile-responsive design
 - [To Do] Accessibility compliance
 - [To Do] Comprehensive user documentation
