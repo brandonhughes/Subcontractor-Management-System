@@ -1,4 +1,4 @@
-const { Review, ReviewResponse, ReviewAttachment, Question, Subcontractor } = require('../models');
+const { Review, ReviewResponse, ReviewAttachment, Question, Subcontractor, sequelize } = require('../models');
 const logger = require('../utils/logger');
 const multer = require('multer');
 const fs = require('fs');
@@ -130,7 +130,13 @@ exports.getReviewsBySubcontractorId = async (req, res) => {
           include: [
             {
               model: Question,
-              as: 'question'
+              as: 'question',
+              include: [
+                {
+                  model: sequelize.models.QuestionCategory,
+                  as: 'category'
+                }
+              ]
             }
           ]
         },

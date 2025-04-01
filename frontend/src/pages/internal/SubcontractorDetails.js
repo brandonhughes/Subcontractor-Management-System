@@ -53,16 +53,26 @@ const ScoreBreakdown = ({ reviews }) => {
     const categoriesMap = new Map();
     
     reviews.forEach(review => {
+      if (!review.responses) return;
+      
       review.responses.forEach(response => {
-        const category = response.question.category;
+        if (!response.question) return;
+        
+        // Handle missing category relationship
         const question = response.question;
+        const category = response.question.category || { 
+          id: 'uncategorized', 
+          name: 'Uncategorized',
+          description: 'Questions without a category',
+          weight: 1
+        };
         
         if (!categoriesMap.has(category.id)) {
           categoriesMap.set(category.id, {
             id: category.id,
-            name: category.name,
-            description: category.description,
-            weight: category.weight,
+            name: category.name || 'Uncategorized',
+            description: category.description || '',
+            weight: category.weight || 1,
             questions: new Map(),
             totalScore: 0,
             count: 0
@@ -231,17 +241,26 @@ const MetricsSection = ({ subcontractor, reviews }) => {
     const questionScores = new Map();
     
     reviews.forEach(review => {
+      // Skip if responses array is missing
+      if (!review.responses || !Array.isArray(review.responses)) return;
+      
       review.responses.forEach(response => {
+        // Skip if response is missing score
+        if (!response || typeof response.score !== 'number') return;
+        
         // Add to rating distribution
         const starIndex = Math.min(Math.max(Math.floor(response.score) - 1, 0), 4);
         ratingDistribution[starIndex]++;
+        
+        // Skip if question data is missing
+        if (!response.question) return;
         
         // Track question scores
         const questionId = response.question.id;
         if (!questionScores.has(questionId)) {
           questionScores.set(questionId, {
             id: questionId,
-            text: response.question.text,
+            text: response.question.text || 'Unknown Question',
             category: response.question.category?.name || 'Uncategorized',
             scores: []
           });
@@ -623,8 +642,12 @@ const ReviewHistory = ({ reviews, subcontractorId }) => {
                 let avgRating = 0;
                 
                 if (responses.length > 0) {
-                  const sum = responses.reduce((total, response) => total + response.score, 0);
-                  avgRating = sum / responses.length;
+                  // Only count responses with valid scores
+                  const validResponses = responses.filter(r => r && typeof r.score === 'number');
+                  if (validResponses.length > 0) {
+                    const sum = validResponses.reduce((total, response) => total + response.score, 0);
+                    avgRating = sum / validResponses.length;
+                  }
                 }
                 
                 return (
