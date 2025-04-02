@@ -32,8 +32,8 @@ fs.copySync(
   }
 );
 
-// Copy port detection scripts to build directory
-console.log('Copying port detection and startup files...');
+// Copy port detection scripts and server files to build directory
+console.log('Copying port detection, server, and startup files...');
 fs.copySync(
   path.join(__dirname, 'express-detect-port.js'),
   path.join(buildDir, 'express-detect-port.js')
@@ -53,6 +53,12 @@ fs.copySync(
 fs.copySync(
   path.join(__dirname, 'simple-server.js'),
   path.join(buildDir, 'simple-server.js')
+);
+// Copy the main server.js file
+console.log('Copying main server.js file...');
+fs.copySync(
+  path.join(__dirname, 'server.js'),
+  path.join(buildDir, 'server.js')
 );
 
 // Ensure script is executable

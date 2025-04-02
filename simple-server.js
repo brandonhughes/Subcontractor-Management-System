@@ -26,6 +26,13 @@ const server = app.listen(PORT, '0.0.0.0', () => {
   // Wait a bit for Render to notice our port is open
   setTimeout(() => {
     console.log('Starting the real application server...');
+    console.log('Current directory:', process.cwd());
+    console.log('Files in current directory:');
+    try {
+      console.log(require('fs').readdirSync('.'));
+    } catch (err) {
+      console.error('Error listing directory:', err);
+    }
     
     // Start the real server
     const realServer = spawn('node', ['server.js'], {
