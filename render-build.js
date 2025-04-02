@@ -94,6 +94,7 @@ const frontendPackageJson = {
   scripts: {
     'start': 'react-scripts start',
     'build': 'react-scripts build',
+    'secure-build': 'npm audit fix && react-scripts build',
     'test': 'react-scripts test',
     'serve': 'serve -s build'
   },
@@ -124,7 +125,7 @@ const rootPackageJson = {
   scripts: {
     'start': 'node server.js',
     'port-detect': 'PORT=10000 node express-detect-port.js',
-    'build:frontend': '(PORT=10000 node express-detect-port.js & sleep 5 && cd frontend && npm install --legacy-peer-deps && npm run build)',
+    'build:frontend': '(PORT=10000 node express-detect-port.js & sleep 5 && cd frontend && npm install --legacy-peer-deps && npm run secure-build)',
     'build:backend': 'cd backend && npm install',
     'build:all': 'npm run build:frontend && npm run build:backend && (pgrep -f "PORT=10000 node express-detect-port.js" | xargs kill -9 || true)'
   },
