@@ -180,85 +180,167 @@ fs.writeFileSync(
   renderStartScript
 );
 
-// Create the server script
-const serverScript = `
+// Create the server script - using the same code as our main server.js
+const serverScript = `/**
+ * Production server for Subcontractor Management System
+ * Serves both the backend API and frontend static files
+ */
+
 const express = require('express');
 const path = require('path');
-const compression = require('compression');
 const cors = require('cors');
+const fs = require('fs');
 const http = require('http');
+const compression = require('compression');
 require('dotenv').config();
 
+// Create Express app
 const app = express();
+const port = process.env.PORT || 10000;
 
-// IMPORTANT: Render looks for applications listening on port 10000 by default
-const PORT = process.env.PORT || 10000;
+// Log startup for monitoring
+console.log(\`
+=========================================
+SUBCONTRACTOR MANAGEMENT SYSTEM
+Production Server Starting
+=========================================
+Date: \${new Date().toISOString()}
+Port: \${port}
+Environment: \${process.env.NODE_ENV || 'development'}
+Node version: \${process.version}
+Working directory: \${process.cwd()}
+=========================================
+\`);
 
-// Log startup for debugging
-console.log("Starting server with PORT:", PORT);
-console.log("Environment:", process.env.NODE_ENV);
-
-// Enable CORS
+// Middleware
 app.use(cors());
-
-// Compress all responses
 app.use(compression());
-
-// Body parsing middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Create health check endpoint at root that Render can detect
-app.get('/', (req, res) => {
-  res.json({ status: 'ok', message: 'Server is running' });
-});
-
-// Add another health check endpoint
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok', message: 'Server is healthy' });
-});
-
 // Create uploads directory if it doesn't exist
-const fs = require('fs');
 const uploadsDir = process.env.UPLOAD_DIR || 'uploads';
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
+  console.log(\`Created uploads directory: \${uploadsDir}\`);
 }
 
-try {
-  // Set up backend API routes under /api
-  app.use('/api', require('./backend/src/routes'));
-  console.log("API routes loaded successfully");
-} catch (error) {
-  console.error("Error loading API routes:", error);
-}
-
-// Serve static files from the frontend build directory
-app.use(express.static(path.join(__dirname, 'frontend', 'build')));
-
-// Serve uploaded files
-app.use('/uploads', express.static(path.join(__dirname, uploadsDir)));
-
-// All requests that aren't for API or static files should be sent to index.html
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'frontend', 'build', 'index.html'));
+// Health check routes
+app.get('/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    message: 'Subcontractor Management System is running',
+    port: port,
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
+  });
 });
 
-// Create HTTP server - required for Render to detect port binding
+// Root health check for Render
+app.get('/api', (req, res) => {
+  res.json({
+    status: 'ok',
+    message: 'Subcontractor Management System API is running',
+    port: port,
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Check for backend routes
+const backendRoutesPath = path.join(__dirname, 'backend', 'src', 'routes');
+if (fs.existsSync(backendRoutesPath)) {
+  try {
+    // Set up backend API routes
+    console.log('Initializing backend API routes...');
+    
+    // Try to load each route file
+    const authRoutes = require('./backend/src/routes/auth.routes');
+    const userRoutes = require('./backend/src/routes/user.routes');
+    const subcontractorRoutes = require('./backend/src/routes/subcontractor.routes');
+    const reviewRoutes = require('./backend/src/routes/review.routes');
+    const questionRoutes = require('./backend/src/routes/question.routes');
+    
+    // Apply routes with /api prefix
+    app.use('/api/auth', authRoutes);
+    app.use('/api/users', userRoutes);
+    app.use('/api/subcontractors', subcontractorRoutes);
+    app.use('/api/reviews', reviewRoutes);
+    app.use('/api/questions', questionRoutes);
+    
+    console.log('Backend API routes initialized successfully');
+  } catch (error) {
+    console.error('Error loading backend routes:', error);
+  }
+} else {
+  console.warn('Backend routes directory not found at:', backendRoutesPath);
+}
+
+// Check for frontend build
+const frontendBuildPath = path.join(__dirname, 'frontend', 'build');
+if (fs.existsSync(frontendBuildPath)) {
+  console.log('Serving frontend static files from:', frontendBuildPath);
+  
+  // Serve static files from frontend build
+  app.use(express.static(frontendBuildPath));
+  
+  // Serve uploaded files
+  app.use('/uploads', express.static(path.join(__dirname, uploadsDir)));
+  
+  // All other routes go to index.html for client-side routing
+  app.get('*', (req, res) => {
+    // Skip API routes
+    if (!req.path.startsWith('/api')) {
+      res.sendFile(path.join(frontendBuildPath, 'index.html'));
+    }
+  });
+} else {
+  console.warn('Frontend build directory not found at:', frontendBuildPath);
+  
+  // Fallback route if no frontend build exists
+  app.get('/', (req, res) => {
+    res.json({
+      status: 'warning',
+      message: 'Subcontractor Management System API is running, but frontend is not built',
+      port: port,
+      timestamp: new Date().toISOString()
+    });
+  });
+}
+
+// Create HTTP server for better error handling
 const server = http.createServer(app);
 
-// Start the server and bind to the correct port
-server.listen(PORT, '0.0.0.0', () => {
-  console.log(\`Server running on port \${PORT}\`);
-  console.log(\`API available at http://localhost:\${PORT}/api\`);
-  console.log(\`Frontend available at http://localhost:\${PORT}\`);
-  console.log(\`Server hostname: \${server.address().address}\`);
-  console.log(\`Server port: \${server.address().port}\`);
+// Start server on all interfaces
+server.listen(port, '0.0.0.0', () => {
+  const serverInfo = server.address();
+  console.log(\`
+SERVER STARTED SUCCESSFULLY
+---------------------------
+Listening on: \${serverInfo.address}:\${serverInfo.port}
+URL: http://localhost:\${serverInfo.port}/
+API URL: http://localhost:\${serverInfo.port}/api
+Health check: http://localhost:\${serverInfo.port}/health
+---------------------------
+  \`);
+  
+  // List files in directories for debugging
+  try {
+    console.log('\\nFrontend build directory contents:');
+    console.log(fs.readdirSync(frontendBuildPath));
+    console.log('\\nBackend routes directory contents:');
+    console.log(fs.readdirSync(backendRoutesPath));
+  } catch (err) {
+    console.error('Error listing directory contents:', err);
+  }
 });
 
-// Handle server errors
-server.on('error', (error) => {
-  console.error('Server error:', error);
+// Error handling
+server.on('error', (err) => {
+  console.error('SERVER ERROR:', err);
+  if (err.code === 'EADDRINUSE') {
+    console.error(\`Port \${port} is already in use. Please use a different port.\`);
+    process.exit(1);
+  }
 });
 `;
 
