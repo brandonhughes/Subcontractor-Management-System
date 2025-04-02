@@ -32,6 +32,21 @@ fs.copySync(
   }
 );
 
+// Copy port detection scripts to build directory
+console.log('Copying port detection files...');
+fs.copySync(
+  path.join(__dirname, 'express-detect-port.js'),
+  path.join(buildDir, 'express-detect-port.js')
+);
+fs.copySync(
+  path.join(__dirname, 'build-detect-port.js'),
+  path.join(buildDir, 'build-detect-port.js')
+);
+fs.copySync(
+  path.join(__dirname, 'render-build.sh'),
+  path.join(buildDir, 'render-build.sh')
+);
+
 // Write a custom package.json for the frontend
 console.log('Creating special frontend package.json...');
 const frontendPackageJson = {
@@ -86,7 +101,8 @@ const rootPackageJson = {
   private: true,
   scripts: {
     'start': 'node server.js',
-    'build:frontend': 'cd frontend && npm install --legacy-peer-deps && npm run build',
+    'port-detect': 'PORT=10000 node express-detect-port.js',
+    'build:frontend': '(PORT=10000 node express-detect-port.js & sleep 5 && cd frontend && npm install --legacy-peer-deps && npm run build)',
     'build:backend': 'cd backend && npm install',
     'build:all': 'npm run build:frontend && npm run build:backend'
   },
