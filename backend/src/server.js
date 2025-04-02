@@ -50,8 +50,9 @@ const startServer = async () => {
       logger.info('Database synchronized');
     }
     
-    app.listen(PORT, () => {
-      logger.info(`Server is running on port ${PORT}`);
+    app.listen(PORT, '0.0.0.0', () => {
+      logger.info(`Server is running on port ${PORT} and bound to all interfaces (0.0.0.0)`);
+      logger.info(`Server address: ${JSON.stringify(app.address ? app.address() : { port: PORT, address: '0.0.0.0' })}`);
     });
   } catch (error) {
     logger.error('Unable to start server:', error);

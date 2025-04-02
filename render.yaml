@@ -5,7 +5,7 @@ services:
     env: node
     region: oregon
     plan: free
-    # Super simple build & start commands
+    # Build & start commands with explicit port binding
     buildCommand: npm install
     startCommand: node server.js
     # Heath check path that the root server will respond to
