@@ -33,7 +33,7 @@ fs.copySync(
 );
 
 // Copy port detection scripts to build directory
-console.log('Copying port detection files...');
+console.log('Copying port detection and startup files...');
 fs.copySync(
   path.join(__dirname, 'express-detect-port.js'),
   path.join(buildDir, 'express-detect-port.js')
@@ -46,6 +46,18 @@ fs.copySync(
   path.join(__dirname, 'render-build.sh'),
   path.join(buildDir, 'render-build.sh')
 );
+fs.copySync(
+  path.join(__dirname, 'render-start.sh'),
+  path.join(buildDir, 'render-start.sh')
+);
+
+// Ensure script is executable
+try {
+  fs.chmodSync(path.join(buildDir, 'render-start.sh'), '755');
+  console.log('Made render-start.sh script executable');
+} catch (error) {
+  console.error('Error making render-start.sh script executable:', error);
+}
 
 // Write a custom package.json for the frontend
 console.log('Creating special frontend package.json...');
@@ -102,7 +114,7 @@ const rootPackageJson = {
   scripts: {
     'start': 'node server.js',
     'port-detect': 'PORT=10000 node express-detect-port.js',
-    'build:frontend': '(PORT=10000 node express-detect-port.js & sleep 5 && cd frontend && npm install --legacy-peer-deps && npm run build)',
+    'build:frontend': '(PORT=10001 node express-detect-port.js & sleep 5 && cd frontend && npm install --legacy-peer-deps && npm run build && killall node || true)',
     'build:backend': 'cd backend && npm install',
     'build:all': 'npm run build:frontend && npm run build:backend'
   },

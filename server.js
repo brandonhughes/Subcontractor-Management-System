@@ -39,7 +39,7 @@ if (!fs.existsSync(uploadsDir)) {
   console.log(`Created uploads directory: ${uploadsDir}`);
 }
 
-// Health check route
+// Health check routes
 app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
@@ -48,6 +48,24 @@ app.get('/health', (req, res) => {
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || 'development'
   });
+});
+
+// Root health check route - this is what Render looks for
+app.get('/', (req, res, next) => {
+  // Check if frontend build exists, if not, return API health information
+  const frontendBuildPath = path.join(__dirname, 'frontend', 'build');
+  if (!fs.existsSync(frontendBuildPath)) {
+    return res.json({
+      status: 'ok',
+      message: 'Subcontractor Management System server is running',
+      port: port,
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || 'development',
+      note: 'Frontend build not found - this is just the API server'
+    });
+  }
+  // If frontend exists, let the static file middleware handle it
+  next();
 });
 
 // Check for backend routes
