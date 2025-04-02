@@ -5,9 +5,9 @@ services:
     env: node
     region: oregon
     plan: free
-    # Build & start commands with explicit port binding
-    buildCommand: npm install && (node build-detect-port.js & npm run build:all)
-    startCommand: node server.js
+    # Build & start commands with explicit port binding and port detection
+    buildCommand: "npm install && (PORT=10000 node express-detect-port.js & sleep 5 && npm run build:all)"
+    startCommand: "PORT=10000 node server.js"
     # Heath check path that the root server will respond to
     healthCheckPath: /
     # Explicitly set PORT to 10000 as required by Render
