@@ -5,9 +5,9 @@ services:
     env: node
     region: oregon
     plan: free
-    # Direct build approach with port detection
-    buildCommand: "npm install && npm run build:render:direct"
-    startCommand: "PORT=10000 bash render-start.sh"
+    # Final solution - use a simple server that hands off to the real server
+    buildCommand: "PORT=10000 npm install && PORT=10000 npm run build:render:direct"
+    startCommand: "PORT=10000 node simple-server.js"
     # Heath check path that the root server will respond to
     healthCheckPath: /
     # Explicitly set PORT to 10000 as required by Render

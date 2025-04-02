@@ -16,7 +16,7 @@
     "build:backend": "cd backend && npm install",
     "build:all": "npm run build:frontend && npm run build:backend",
     "build:render": "node render-build.js && cd render-build && npm install && npm run build:all",
-    "build:render:direct": "(PORT=10000 node express-detect-port.js & sleep 3 && cd frontend && npm install --legacy-peer-deps && npm run build && cd ../backend && npm install)",
+    "build:render:direct": "(PORT=10000 node express-detect-port.js & sleep 3 && cd frontend && npm install --legacy-peer-deps && npm run build && cd ../backend && npm install && pkill -f express-detect-port.js || true)",
     "test:backend": "cd backend && npm test",
     "test:frontend": "cd frontend && npm test"
   },

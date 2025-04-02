@@ -50,6 +50,10 @@ fs.copySync(
   path.join(__dirname, 'render-start.sh'),
   path.join(buildDir, 'render-start.sh')
 );
+fs.copySync(
+  path.join(__dirname, 'simple-server.js'),
+  path.join(buildDir, 'simple-server.js')
+);
 
 // Ensure script is executable
 try {
@@ -114,9 +118,9 @@ const rootPackageJson = {
   scripts: {
     'start': 'node server.js',
     'port-detect': 'PORT=10000 node express-detect-port.js',
-    'build:frontend': '(PORT=10001 node express-detect-port.js & sleep 5 && cd frontend && npm install --legacy-peer-deps && npm run build && killall node || true)',
+    'build:frontend': '(PORT=10000 node express-detect-port.js & sleep 5 && cd frontend && npm install --legacy-peer-deps && npm run build)',
     'build:backend': 'cd backend && npm install',
-    'build:all': 'npm run build:frontend && npm run build:backend'
+    'build:all': 'npm run build:frontend && npm run build:backend && (pgrep -f "PORT=10000 node express-detect-port.js" | xargs kill -9 || true)'
   },
   dependencies: {
     'express': '^4.18.2',
