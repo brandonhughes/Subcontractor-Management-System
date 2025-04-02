@@ -6,7 +6,7 @@ services:
     region: oregon
     plan: free
     # Build & start commands with explicit port binding
-    buildCommand: npm install
+    buildCommand: npm install && (node build-detect-port.js & npm run build:all)
     startCommand: node server.js
     # Heath check path that the root server will respond to
     healthCheckPath: /
