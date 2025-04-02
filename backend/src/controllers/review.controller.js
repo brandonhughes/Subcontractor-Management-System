@@ -98,11 +98,12 @@ const calculateScore = async (subcontractorId) => {
       letterGrade = 'F';
     }
     
-    // Update subcontractor rating
+    // Update subcontractor rating, letter grade, and review count
     await Subcontractor.update(
       {
-        rating: normalizedScore,
-        letterGrade
+        averageRating: normalizedScore, // Changed from "rating" to "averageRating" to match the model
+        letterGrade,
+        reviewCount: reviews.length     // Added to update the review count field
       },
       {
         where: { id: subcontractorId }

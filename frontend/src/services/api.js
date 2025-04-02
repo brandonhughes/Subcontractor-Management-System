@@ -10,6 +10,20 @@ const api = axios.create({
 // Debug API configuration
 console.log('API Base URL:', api.defaults.baseURL);
 
+// Check response data for debugging
+api.interceptors.response.use(
+  (response) => {
+    // For debugging subcontractor data
+    if (response.config.url.includes('/api/subcontractors') && !response.config.url.includes('/documents')) {
+      console.log('Subcontractor API Response:', response.data);
+    }
+    return response;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 // API service object for more organized usage
 const apiService = {
   // Auth
