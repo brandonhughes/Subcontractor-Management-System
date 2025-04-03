@@ -3,13 +3,15 @@ import {
   Typography, Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
   Button, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
   TextField, FormControl, InputLabel, Select, MenuItem, Chip, CircularProgress, TablePagination,
-  Snackbar, Alert, Grid, Stack, FormGroup, FormControlLabel, Checkbox
+  Snackbar, Alert, Grid, Stack, FormGroup, FormControlLabel, Checkbox, Tooltip
 } from '@mui/material';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import {
   Add as AddIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
-  Refresh as RefreshIcon
+  Refresh as RefreshIcon,
+  Visibility as VisibilityIcon
 } from '@mui/icons-material';
 
 import { apiService } from '../../services/api';
@@ -39,6 +41,7 @@ const CONSTRUCTION_SPECIALTIES = [
 ];
 
 const SubcontractorList = () => {
+  const navigate = useNavigate();
   const [subcontractors, setSubcontractors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -409,20 +412,30 @@ const SubcontractorList = () => {
                         />
                       </TableCell>
                       <TableCell align="right">
-                        <IconButton 
-                          color="primary" 
-                          onClick={() => handleOpenEditDialog(subcontractor)}
-                          title="Edit Subcontractor"
-                        >
-                          <EditIcon />
-                        </IconButton>
-                        <IconButton 
-                          color="error" 
-                          onClick={() => handleOpenDeleteDialog(subcontractor)}
-                          title="Delete Subcontractor"
-                        >
-                          <DeleteIcon />
-                        </IconButton>
+                        <Tooltip title="View Details">
+                          <IconButton 
+                            color="info" 
+                            onClick={() => navigate(`/subcontractors/${subcontractor.id}`)}
+                          >
+                            <VisibilityIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Edit Subcontractor">
+                          <IconButton 
+                            color="primary" 
+                            onClick={() => handleOpenEditDialog(subcontractor)}
+                          >
+                            <EditIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Delete Subcontractor">
+                          <IconButton 
+                            color="error" 
+                            onClick={() => handleOpenDeleteDialog(subcontractor)}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Tooltip>
                       </TableCell>
                     </TableRow>
                 ))}
